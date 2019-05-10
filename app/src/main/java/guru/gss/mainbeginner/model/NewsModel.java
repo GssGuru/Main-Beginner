@@ -1,7 +1,4 @@
-package guru.gss.mainbeginner.utils.model;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+package guru.gss.mainbeginner.model;
 
 import java.util.Objects;
 
@@ -16,22 +13,13 @@ public class NewsModel {
         this.publishedAt = publishedAt;
     }
 
-    public NewsModel() {}
+    public NewsModel() {
+    }
 
-    @SerializedName("title")
-    @Expose
     private String title = "";
-    @SerializedName("description")
-    @Expose
     private String description = "";
-    @SerializedName("url")
-    @Expose
     private String url = "";
-    @SerializedName("urlToImage")
-    @Expose
     private String urlToImage = "";
-    @SerializedName("publishedAt")
-    @Expose
     private String publishedAt = "";
 
     public String getTitle() {

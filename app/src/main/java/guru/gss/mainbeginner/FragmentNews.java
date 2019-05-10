@@ -1,53 +1,56 @@
-package guru.gss.mainbeginner.aplication.main.fragment;
+package guru.gss.mainbeginner;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.ProvidePresenter;
-import com.baoyz.widget.PullRefreshLayout;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import guru.gss.mainbeginner.R;
-import guru.gss.mainbeginner.aplication.BaseFragment;
-import guru.gss.mainbeginner.model.interactors.news.NewsInteractor;
-import guru.gss.mainbeginner.model.repository.network.NetworkRepositoryImpl;
-import guru.gss.mainbeginner.utils.model.NewsModel;
+import guru.gss.mainbeginner.model.NewsModel;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-public class FragmentNews extends BaseFragment implements ViewFragment {
+public class FragmentNews extends Fragment {
 
-    @InjectPresenter
-    PresenterFragment presenter;
+    private final String URL = "https://gss.guru/api/authorization";
+    private final String TAG = "gss.guru";
+    private OkHttpClient client = new OkHttpClient();
+    private GetNewsTask task = null;
 
-    @ProvidePresenter
-    PresenterFragment providePresenter() {
-        return new PresenterFragment(new NewsInteractor(new NetworkRepositoryImpl()));
-    }
 
     private static final String NEWS_AUTHOR = "news_author";
     private static final String NEWS_TITLE = "news_title";
     private String author, title;
 
     private OnFragmentInteractionListener mListener;
+    public interface OnFragmentInteractionListener {
+        void openDrover();
+    }
 
     private AdapterNews adapterNews;
     private ProgressBar progress;
     private RecyclerView recyclerView;
     private LinearLayout fl_items_not_found;
-    private PullRefreshLayout refresh_view;
+    private SwipeRefreshLayout refresh_view;
 
     public FragmentNews() {
     }
@@ -80,10 +83,10 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
         recyclerView = v.findViewById(R.id.recyclerView);
         fl_items_not_found = v.findViewById(R.id.fl_items_not_found);
 
-        refresh_view.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        refresh_view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.getNewsList(author);
+//                presenter.getNewsList(author);
             }
         });
 
@@ -113,7 +116,7 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
         mToolbar.setTitle(String.valueOf(title));
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
 
-        presenter.getNewsList(author);
+//        presenter.getNewsList(author);
 
         return v;
     }
@@ -134,12 +137,12 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
         super.onResume();
         if (mUserVisibleHint) {
             if (adapterNews.getItemCount() == 0) {
-                presenter.getNewsList(author);
+//                presenter.getNewsList(author);
             }
         }
     }
 
-    @Override
+
     public void setListNews(ArrayList<NewsModel> list) {
         if (list.size() == 0) {
             if (fl_items_not_found.getVisibility() != View.VISIBLE) {
@@ -152,19 +155,19 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
         hideRefreshView(refresh_view);
     }
 
-    @Override
+
     public void setEmptyList() {
         hideRefreshView(refresh_view);
     }
 
-    @Override
+
     public void setError() {
         hideRefreshView(refresh_view);
         DialigError mDialigError = DialigError.newInstance();
         mDialigError.registerInterfaceCallback(new DialigError.InterfaceCallback() {
             @Override
             public void refresh() {
-                presenter.getNewsList(author);
+//                presenter.getNewsList(author);
             }
 
             @Override
@@ -173,12 +176,6 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
             }
         });
         mDialigError.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), mDialigError.getClass().getSimpleName());
-    }
-
-    public void hideRefreshView(PullRefreshLayout refresh_view) {
-        if (refresh_view.isShown()) {
-            refresh_view.setRefreshing(false);
-        }
     }
 
     @Override
@@ -198,8 +195,111 @@ public class FragmentNews extends BaseFragment implements ViewFragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void openDrover();
+    private void showContentAnimation(final View newView, final View oldView) {
+        final AlphaAnimation newViewAnimation = new AlphaAnimation(0.0f, 1.0f);
+        AlphaAnimation oldViewAnimation = new AlphaAnimation(1.0f, 0.0f);
+        newViewAnimation.setDuration(250);
+        oldViewAnimation.setDuration(250);
+        oldView.startAnimation(oldViewAnimation);
+        oldViewAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                oldView.setVisibility(View.GONE);
+                newView.setVisibility(View.VISIBLE);
+                newView.startAnimation(newViewAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+    }
+
+    public void hideRefreshView(SwipeRefreshLayout refresh_view) {
+        if (refresh_view.isShown()) {
+            refresh_view.setRefreshing(false);
+        }
+    }
+
+    public class GetNewsTask extends AsyncTask<Void, Void, ArrayList<NewsModel>> {
+
+        private final String mAuthor;
+
+        GetNewsTask(String author) {
+            mAuthor = author;
+        }
+
+        @Override
+        protected ArrayList<NewsModel> doInBackground(Void... params) {
+
+            Request request = new Request.Builder()
+                    .url(URL)
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                if (response.body() != null) {
+                    try {
+                        String body = response.body().string();
+                        ArrayList<NewsModel> list = new ArrayList<>();
+                        return list;
+                    } catch (IOException e) {
+                        Log.e(TAG, "UserLoginTask.doInBackground", e);
+                    }
+                } else {
+                    Log.e(TAG, "UserLoginTask.doInBackground response.body() != null");
+                }
+                return null;
+            } catch (IOException e) {
+                Log.e(TAG, "UserLoginTask.doInBackground", e);
+                return null;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(final ArrayList<NewsModel> list) {
+
+//            if (requestResult != null) {
+//                try {
+//                    JSONObject argJSON = new JSONObject(requestResult);
+//                    String response = argJSON.getString("response");
+//                    JSONObject responseJSON = new JSONObject(response);
+//                    String status = responseJSON.getString("status");
+//                    if (status.equals("saccess")) {
+//                        saveEmailAndPasswd(mEmail, mPassword);
+//                        Toast.makeText(LoginActivity.this, "Авторизация успешна", Toast.LENGTH_SHORT).show();
+//                        /*
+//                         * TODO
+//                         * Поздровляю))) Ми залогинелись
+//                         */
+//                    }
+//                } catch (JSONException e) {
+//                    Log.e(TAG, "UserLoginTask.onPostExecute", e);
+//                }
+//            } else {
+//                Toast.makeText(LoginActivity.this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
+//            }
+//            showLoadingDialog(false);
+        }
+
+        @Override
+        protected void onCancelled() {
+//            showLoadingDialog(false);
+        }
     }
 
 }

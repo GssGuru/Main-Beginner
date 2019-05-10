@@ -1,4 +1,4 @@
-package guru.gss.mainbeginner.aplication.main.fragment;
+package guru.gss.mainbeginner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
-import guru.gss.mainbeginner.R;
-import guru.gss.mainbeginner.utils.model.NewsModel;
+import guru.gss.mainbeginner.model.NewsModel;
+
 
 /*Simple adapter for News*/
 public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
@@ -64,7 +64,7 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
 
             Glide.with(context)
                     .load(newsModel.getUrlToImage())
-                    .skipMemoryCache( true )
+                    .skipMemoryCache(true)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -93,7 +93,7 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
         holder.iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if(!TextUtils.isEmpty(newsModel.getUrl())) {
+                if (!TextUtils.isEmpty(newsModel.getUrl())) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, newsModel.getUrl());

@@ -1,4 +1,4 @@
-package guru.gss.mainbeginner.aplication.main.fragment;
+package guru.gss.mainbeginner;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,8 +11,6 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import java.util.Objects;
-
-import guru.gss.mainbeginner.R;
 
 public class DialigError extends DialogFragment {
 
