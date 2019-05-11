@@ -1,5 +1,5 @@
 # Main Page
-about
+Simple main page with news feeds using fragments, dialogs, adapter, navigation menu
 
 # Attention! 
 This example was created exclusively for very beginner programmers. For such a code you will be dismissed from work but at this stage he will help you understand the essence of the work.
