@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,18 +21,23 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import guru.gss.mainbeginner.model.NewsModel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class FragmentNews extends Fragment {
 
-    private final String URL = "https://gss.guru/api/authorization";
+    private final String URL = "https://newsapi.org/";
+    private final String API_KEY = "7c4feddaa4b749a48dfa50252ccde419";
+
     private final String TAG = "gss.guru";
     private OkHttpClient client = new OkHttpClient();
     private GetNewsTask task = null;
@@ -86,7 +92,7 @@ public class FragmentNews extends Fragment {
         refresh_view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                presenter.getNewsList(author);
+                getListNews();
             }
         });
 
@@ -115,33 +121,24 @@ public class FragmentNews extends Fragment {
 
         mToolbar.setTitle(String.valueOf(title));
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
+        AppBarLayout app_bar = (AppBarLayout)v.findViewById(R.id.app_bar);
+        app_bar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                mToolbar.setAlpha(1.5f - ((float) Math.abs(verticalOffset) / ((float) appBarLayout.getTotalScrollRange() / 3)));
+            }
+        });
 
-//        presenter.getNewsList(author);
-
+        getListNews();
         return v;
     }
 
-    boolean mUserVisibleHint;
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-        mUserVisibleHint = menuVisible;
-        if (menuVisible && isResumed()) {
-            onResume();
+    private void getListNews(){
+        if (task == null) {
+            task = new GetNewsTask(author);
+            task.execute((Void) null);
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mUserVisibleHint) {
-            if (adapterNews.getItemCount() == 0) {
-//                presenter.getNewsList(author);
-            }
-        }
-    }
-
 
     public void setListNews(ArrayList<NewsModel> list) {
         if (list.size() == 0) {
@@ -155,11 +152,9 @@ public class FragmentNews extends Fragment {
         hideRefreshView(refresh_view);
     }
 
-
     public void setEmptyList() {
         hideRefreshView(refresh_view);
     }
-
 
     public void setError() {
         hideRefreshView(refresh_view);
@@ -167,7 +162,8 @@ public class FragmentNews extends Fragment {
         mDialigError.registerInterfaceCallback(new DialigError.InterfaceCallback() {
             @Override
             public void refresh() {
-//                presenter.getNewsList(author);
+
+                getListNews();
             }
 
             @Override
@@ -225,81 +221,72 @@ public class FragmentNews extends Fragment {
 
     public class GetNewsTask extends AsyncTask<Void, Void, ArrayList<NewsModel>> {
 
-        private final String mAuthor;
+        private String url;
 
         GetNewsTask(String author) {
-            mAuthor = author;
+            url = URL + "v1/articles?source=" + author + "&sortBy=top&apiKey=" + API_KEY;
+            Log.d(TAG, "url = " + url);
         }
 
         @Override
         protected ArrayList<NewsModel> doInBackground(Void... params) {
 
             Request request = new Request.Builder()
-                    .url(URL)
+                    .url(url)
                     .build();
             try (Response response = client.newCall(request).execute()) {
                 if (response.body() != null) {
                     try {
                         String body = response.body().string();
+                        Log.d(TAG, "UserLoginTask.doInBackground response.body() = " + body);
                         ArrayList<NewsModel> list = new ArrayList<>();
+                        try {
+                            JSONObject argJSON = new JSONObject(body);
+                            String status = argJSON.getString("status");
+                            if(status != null && status.equals("ok")){
+                                String articles = argJSON.getString("articles");
+                                JSONArray listJSON = new JSONArray(articles);
+                                for (int i = 0; i < listJSON.length(); i++){
+                                    String object = listJSON.get(i).toString();
+                                    JSONObject jsonObject = new JSONObject(object);
+                                    String title = jsonObject.getString("title");
+                                    String description = jsonObject.getString("description");
+                                    String url = jsonObject.getString("url");
+                                    String urlToImage = jsonObject.getString("urlToImage");
+                                    String publishedAt = jsonObject.getString("publishedAt");
+                                    NewsModel newsModel = new NewsModel(title, description, url, urlToImage, publishedAt);
+                                    list.add(newsModel);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "UserLoginTask.doInBackground JSONException", e);
+                        }
                         return list;
                     } catch (IOException e) {
                         Log.e(TAG, "UserLoginTask.doInBackground", e);
                     }
                 } else {
-                    Log.e(TAG, "UserLoginTask.doInBackground response.body() != null");
+                    Log.e(TAG, "UserLoginTask.doInBackground response.body() == null");
                 }
                 return null;
             } catch (IOException e) {
                 Log.e(TAG, "UserLoginTask.doInBackground", e);
                 return null;
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
         @Override
         protected void onPostExecute(final ArrayList<NewsModel> list) {
-
-//            if (requestResult != null) {
-//                try {
-//                    JSONObject argJSON = new JSONObject(requestResult);
-//                    String response = argJSON.getString("response");
-//                    JSONObject responseJSON = new JSONObject(response);
-//                    String status = responseJSON.getString("status");
-//                    if (status.equals("saccess")) {
-//                        saveEmailAndPasswd(mEmail, mPassword);
-//                        Toast.makeText(LoginActivity.this, "Авторизация успешна", Toast.LENGTH_SHORT).show();
-//                        /*
-//                         * TODO
-//                         * Поздровляю))) Ми залогинелись
-//                         */
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e(TAG, "UserLoginTask.onPostExecute", e);
-//                }
-//            } else {
-//                Toast.makeText(LoginActivity.this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
-//            }
-//            showLoadingDialog(false);
+            if(list == null){
+                setEmptyList();
+            } else {
+                setListNews(list);
+            }
         }
 
         @Override
         protected void onCancelled() {
-//            showLoadingDialog(false);
+            setError();
         }
     }
-
 }

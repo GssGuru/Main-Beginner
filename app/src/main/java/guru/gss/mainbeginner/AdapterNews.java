@@ -22,8 +22,6 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
-import guru.gss.mainbeginner.model.NewsModel;
-
 
 /*Simple adapter for News*/
 public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
@@ -98,7 +96,7 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, newsModel.getUrl());
                     sendIntent.setType("text/plain");
-                    context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.text_send_to)));
+                    context.startActivity(Intent.createChooser(sendIntent, "Send to"));
                 }
             }
         });
@@ -124,6 +122,7 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
 
         ViewHolder(View itemView) {
             super(itemView);
+
             pb_image = itemView.findViewById(R.id.pb_image);
             fl_media_content = itemView.findViewById(R.id.fl_media_content);
             ll_click = itemView.findViewById(R.id.ll_click);

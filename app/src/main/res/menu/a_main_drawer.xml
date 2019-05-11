@@ -5,47 +5,47 @@
         <item
             android:id="@+id/i_the_washington_post"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/the_washington_post" />
+            android:title="The Washington Post" />
 
         <item
             android:id="@+id/i_the_new_york_times"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/the_new_york_times" />
+            android:title="The New York Times" />
 
         <item
             android:id="@+id/i_the_telegraph"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/the_telegraph" />
+            android:title="The Telegraph" />
 
         <item
             android:id="@+id/i_cnn"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/cnn" />
+            android:title="CNN" />
 
         <item
             android:id="@+id/i_time"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/time" />
+            android:title="Time" />
 
         <item
             android:id="@+id/i_bbc_news"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/bbc_news" />
+            android:title="BBC News" />
 
         <item
             android:id="@+id/i_associated_press"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/associated_press" />
+            android:title="Associated Press" />
 
         <item
             android:id="@+id/i_independent"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/independent" />
+            android:title="Independent" />
 
         <item
             android:id="@+id/i_reuters"
             android:icon="@drawable/ic_menu_charch_black"
-            android:title="@string/reuters" />
+            android:title="Reuters" />
 
     </group>
 </menu>

@@ -1,8 +1,5 @@
-package guru.gss.mainbeginner.model;
+package guru.gss.mainbeginner;
 
-import java.util.Objects;
-
-/*Model for one news*/
 public class NewsModel {
 
     public NewsModel(String title, String description, String url, String urlToImage, String publishedAt) {
@@ -13,14 +10,13 @@ public class NewsModel {
         this.publishedAt = publishedAt;
     }
 
-    public NewsModel() {
-    }
+    public NewsModel() {}
 
-    private String title = "";
-    private String description = "";
-    private String url = "";
-    private String urlToImage = "";
-    private String publishedAt = "";
+    private String title;
+    private String description;
+    private String url;
+    private String urlToImage;
+    private String publishedAt;
 
     public String getTitle() {
         return title;
@@ -62,21 +58,4 @@ public class NewsModel {
         this.publishedAt = publishedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NewsModel newsModel = (NewsModel) o;
-        return Objects.equals(title, newsModel.title) &&
-                Objects.equals(description, newsModel.description) &&
-                Objects.equals(url, newsModel.url) &&
-                Objects.equals(urlToImage, newsModel.urlToImage) &&
-                Objects.equals(publishedAt, newsModel.publishedAt);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(title, description, url, urlToImage, publishedAt);
-    }
 }

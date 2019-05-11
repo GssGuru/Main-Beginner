@@ -1,6 +1,5 @@
 package guru.gss.mainbeginner;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -58,24 +57,9 @@ public class DialigError extends DialogFragment {
         Objects.requireNonNull(getDialog().getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle arg0) {
-        super.onActivityCreated(arg0);
-        Objects.requireNonNull(getDialog().getWindow()).getAttributes().windowAnimations = R.style.DialogAnimationNew;
-    }
-
     public interface InterfaceCallback {
         void refresh();
+
         void exit();
     }
 
