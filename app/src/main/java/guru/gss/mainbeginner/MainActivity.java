@@ -10,7 +10,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentNews.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentNewsFeed.OnFragmentInteractionListener {
+
 
     private int mIdSelectedItem;
     private DrawerLayout mDrawer;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        setFragment(FragmentNews.newInstance("the-washington-post", "The Washington Post"), R.id.fl_fragment_conteiner);
+        setFragment(FragmentNewsFeed.newInstance("the-washington-post", "The Washington Post"), R.id.fl_fragment_conteiner);
         mIdSelectedItem = R.id.i_the_washington_post;
     }
 
@@ -54,34 +55,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Fragment fragment;
             switch (id) {
                 case R.id.i_the_washington_post:
-                    fragment = FragmentNews.newInstance("the-washington-post", "The Washington Post");
+                    fragment = FragmentNewsFeed.newInstance("the-washington-post", "The Washington Post");
                     break;
                 case R.id.i_the_new_york_times:
-                    fragment = FragmentNews.newInstance("the-new-york-times", "The New York Times");
+                    fragment = FragmentNewsFeed.newInstance("the-new-york-times", "The New York Times");
                     break;
                 case R.id.i_the_telegraph:
-                    fragment = FragmentNews.newInstance("the-telegraph", "The Telegraph");
+                    fragment = FragmentNewsFeed.newInstance("the-telegraph", "The Telegraph");
                     break;
                 case R.id.i_cnn:
-                    fragment = FragmentNews.newInstance("cnn", "CNN");
+                    fragment = FragmentNewsFeed.newInstance("cnn", "CNN");
                     break;
                 case R.id.i_time:
-                    fragment = FragmentNews.newInstance("time", "Time");
+                    fragment = FragmentNewsFeed.newInstance("time", "Time");
                     break;
                 case R.id.i_bbc_news:
-                    fragment = FragmentNews.newInstance("bbc-news", "BBC News");
+                    fragment = FragmentNewsFeed.newInstance("bbc-news", "BBC News");
                     break;
                 case R.id.i_associated_press:
-                    fragment = FragmentNews.newInstance("associated-press", "Associated Press");
+                    fragment = FragmentNewsFeed.newInstance("associated-press", "Associated Press");
                     break;
                 case R.id.i_independent:
-                    fragment = FragmentNews.newInstance("independent", "Independent");
+                    fragment = FragmentNewsFeed.newInstance("independent", "Independent");
                     break;
                 case R.id.i_reuters:
-                    fragment = FragmentNews.newInstance("reuters", "Reuters");
+                    fragment = FragmentNewsFeed.newInstance("reuters", "Reuters");
                     break;
                 default:
-                    fragment = FragmentNews.newInstance("the-washington-post", "The Washington Post");
+                    fragment = FragmentNewsFeed.newInstance("the-washington-post", "The Washington Post");
                     break;
             }
             setFragment(fragment, R.id.fl_fragment_conteiner);

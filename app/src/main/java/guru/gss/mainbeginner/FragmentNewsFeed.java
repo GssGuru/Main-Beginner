@@ -33,7 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FragmentNews extends Fragment {
+public class FragmentNewsFeed extends Fragment {
 
     private final String URL = "https://newsapi.org/";
     private final String API_KEY = "7c4feddaa4b749a48dfa50252ccde419";
@@ -52,17 +52,17 @@ public class FragmentNews extends Fragment {
         void openDrover();
     }
 
-    private AdapterNews adapterNews;
+    private AdapterNewsFeed adapterNewsFeed;
     private ProgressBar progress;
     private RecyclerView recyclerView;
     private LinearLayout fl_items_not_found;
     private SwipeRefreshLayout refresh_view;
 
-    public FragmentNews() {
+    public FragmentNewsFeed() {
     }
 
-    public static FragmentNews newInstance(String author, String title) {
-        FragmentNews fragment = new FragmentNews();
+    public static FragmentNewsFeed newInstance(String author, String title) {
+        FragmentNewsFeed fragment = new FragmentNewsFeed();
         Bundle args = new Bundle();
         args.putString(NEWS_AUTHOR, author);
         args.putString(NEWS_TITLE, title);
@@ -96,11 +96,11 @@ public class FragmentNews extends Fragment {
             }
         });
 
-        adapterNews = new AdapterNews(getContext());
+        adapterNewsFeed = new AdapterNewsFeed(getContext());
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_news_animation);
         recyclerView.setLayoutAnimation(animation);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapterNews);
+        recyclerView.setAdapter(adapterNewsFeed);
 
         progress.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -140,13 +140,13 @@ public class FragmentNews extends Fragment {
         }
     }
 
-    public void setListNews(ArrayList<NewsModel> list) {
+    public void setListNews(ArrayList<ModelNewsFeed> list) {
         if (list.size() == 0) {
             if (fl_items_not_found.getVisibility() != View.VISIBLE) {
                 showContentAnimation(fl_items_not_found, progress);
             }
         } else {
-            adapterNews.addAll(list);
+            adapterNewsFeed.addAll(list);
             showContentAnimation(recyclerView, progress);
         }
         hideRefreshView(refresh_view);
@@ -219,7 +219,7 @@ public class FragmentNews extends Fragment {
         }
     }
 
-    public class GetNewsTask extends AsyncTask<Void, Void, ArrayList<NewsModel>> {
+    public class GetNewsTask extends AsyncTask<Void, Void, ArrayList<ModelNewsFeed>> {
 
         private String url;
 
@@ -229,7 +229,7 @@ public class FragmentNews extends Fragment {
         }
 
         @Override
-        protected ArrayList<NewsModel> doInBackground(Void... params) {
+        protected ArrayList<ModelNewsFeed> doInBackground(Void... params) {
 
             Request request = new Request.Builder()
                     .url(url)
@@ -239,7 +239,7 @@ public class FragmentNews extends Fragment {
                     try {
                         String body = response.body().string();
                         Log.d(TAG, "UserLoginTask.doInBackground response.body() = " + body);
-                        ArrayList<NewsModel> list = new ArrayList<>();
+                        ArrayList<ModelNewsFeed> list = new ArrayList<>();
                         try {
                             JSONObject argJSON = new JSONObject(body);
                             String status = argJSON.getString("status");
@@ -254,8 +254,8 @@ public class FragmentNews extends Fragment {
                                     String url = jsonObject.getString("url");
                                     String urlToImage = jsonObject.getString("urlToImage");
                                     String publishedAt = jsonObject.getString("publishedAt");
-                                    NewsModel newsModel = new NewsModel(title, description, url, urlToImage, publishedAt);
-                                    list.add(newsModel);
+                                    ModelNewsFeed modelNewsFeed = new ModelNewsFeed(title, description, url, urlToImage, publishedAt);
+                                    list.add(modelNewsFeed);
                                 }
                             }
                         } catch (JSONException e) {
@@ -276,7 +276,7 @@ public class FragmentNews extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(final ArrayList<NewsModel> list) {
+        protected void onPostExecute(final ArrayList<ModelNewsFeed> list) {
             if(list == null){
                 setEmptyList();
             } else {

@@ -24,44 +24,44 @@ import java.util.ArrayList;
 
 
 /*Simple adapter for News*/
-public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
+public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHolder> {
 
     private Context context;
-    private ArrayList<NewsModel> list;
+    private ArrayList<ModelNewsFeed> list;
 
-    AdapterNews(Context context) {
+    AdapterNewsFeed(Context context) {
         this.context = context;
         this.list = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public AdapterNews.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterNewsFeed.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.i_news, parent, false);
-        return new AdapterNews.ViewHolder(v);
+        return new AdapterNewsFeed.ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final AdapterNews.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final AdapterNewsFeed.ViewHolder holder, final int position) {
 
-        final NewsModel newsModel = list.get(position);
+        final ModelNewsFeed modelNewsFeed = list.get(position);
 
-        if (!TextUtils.isEmpty(newsModel.getPublishedAt())) {
+        if (!TextUtils.isEmpty(modelNewsFeed.getPublishedAt())) {
             holder.tv_time.setVisibility(View.VISIBLE);
-            holder.tv_time.setText(newsModel.getPublishedAt());
+            holder.tv_time.setText(modelNewsFeed.getPublishedAt());
         }
 
-        if (!TextUtils.isEmpty(newsModel.getDescription())) {
+        if (!TextUtils.isEmpty(modelNewsFeed.getDescription())) {
             holder.tv_description.setVisibility(View.VISIBLE);
-            holder.tv_description.setText(newsModel.getDescription());
+            holder.tv_description.setText(modelNewsFeed.getDescription());
         }
 
-        if (!TextUtils.isEmpty(newsModel.getUrlToImage())) {
+        if (!TextUtils.isEmpty(modelNewsFeed.getUrlToImage())) {
             holder.fl_media_content.setVisibility(View.VISIBLE);
 
             Glide.with(context)
-                    .load(newsModel.getUrlToImage())
+                    .load(modelNewsFeed.getUrlToImage())
                     .skipMemoryCache(true)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
@@ -82,8 +82,8 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
         holder.ll_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (!TextUtils.isEmpty(newsModel.getUrl())) {
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(newsModel.getUrl())));
+                if (!TextUtils.isEmpty(modelNewsFeed.getUrl())) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(modelNewsFeed.getUrl())));
                 }
             }
         });
@@ -91,19 +91,19 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
         holder.iv_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (!TextUtils.isEmpty(newsModel.getUrl())) {
+                if (!TextUtils.isEmpty(modelNewsFeed.getUrl())) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, newsModel.getUrl());
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, modelNewsFeed.getUrl());
                     sendIntent.setType("text/plain");
                     context.startActivity(Intent.createChooser(sendIntent, "Send to"));
                 }
             }
         });
 
-        if (!TextUtils.isEmpty(newsModel.getTitle())) {
+        if (!TextUtils.isEmpty(modelNewsFeed.getTitle())) {
             holder.tv_title.setVisibility(View.VISIBLE);
-            holder.tv_title.setText(newsModel.getTitle());
+            holder.tv_title.setText(modelNewsFeed.getTitle());
         }
     }
 
@@ -134,7 +134,7 @@ public class AdapterNews extends RecyclerView.Adapter<AdapterNews.ViewHolder> {
         }
     }
 
-    void addAll(ArrayList<NewsModel> list) {
+    void addAll(ArrayList<ModelNewsFeed> list) {
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();
