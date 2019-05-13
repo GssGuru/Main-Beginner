@@ -23,9 +23,16 @@ import com.bumptech.glide.request.target.Target;
 import java.util.ArrayList;
 
 
-/*Simple adapter for News*/
+/*
+ENG: Simple adapter showing news feed
+RU: Простой adapter отображающий новостную ленту
+*/
 public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHolder> {
 
+    /*
+    ENG: Prepare items to work with the list
+    RU: Подготовить элементы для работы со списком
+    */
     private Context context;
     private ArrayList<ModelNewsFeed> list;
 
@@ -34,6 +41,10 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
         this.list = new ArrayList<>();
     }
 
+    /*
+    ENG: Basic elements for working with a list
+    RU: Базовые элементы для работы со списком
+    */
     @NonNull
     @Override
     public AdapterNewsFeed.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,6 +53,15 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
         return new AdapterNewsFeed.ViewHolder(v);
     }
 
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    /*
+    ENG: Цork with View for each position in the list
+    RU: Работаем с View для каждой позиции в списке
+    */
     @Override
     public void onBindViewHolder(@NonNull final AdapterNewsFeed.ViewHolder holder, final int position) {
 
@@ -59,7 +79,6 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
 
         if (!TextUtils.isEmpty(modelNewsFeed.getUrlToImage())) {
             holder.fl_media_content.setVisibility(View.VISIBLE);
-
             Glide.with(context)
                     .load(modelNewsFeed.getUrlToImage())
                     .skipMemoryCache(true)
@@ -107,11 +126,10 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
+    /*
+    ENG: prepare Views elements
+    RU: подготовить элементы Views
+    */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView iv_image, iv_share;
@@ -122,7 +140,6 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
 
         ViewHolder(View itemView) {
             super(itemView);
-
             pb_image = itemView.findViewById(R.id.pb_image);
             fl_media_content = itemView.findViewById(R.id.fl_media_content);
             ll_click = itemView.findViewById(R.id.ll_click);
@@ -134,6 +151,10 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
         }
     }
 
+    /*
+    ENG: Transfer the news list to the adapter
+    RU: Передаем список новостей в адаптер
+    */
     void addAll(ArrayList<ModelNewsFeed> list) {
         this.list.clear();
         this.list.addAll(list);

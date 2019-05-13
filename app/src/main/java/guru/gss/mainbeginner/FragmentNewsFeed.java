@@ -33,34 +33,60 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/*
+ENG: prepare Views elements
+RU: подготовить элементы Views
+*/
 public class FragmentNewsFeed extends Fragment {
 
+    /*
+    ENG: Prepare TAG elements
+    RU: Подготовить элементы TAG
+    */
+    private final String TAG = "gss.guru";
+
+    /*
+    ENG: Prepare elements for internet request
+    RU: Подготовить элементы для интернет-запроса
+    */
+    private OkHttpClient client = new OkHttpClient();
+    private GetNewsTask task = null;
     private final String URL = "https://newsapi.org/";
     private final String API_KEY = "7c4feddaa4b749a48dfa50252ccde419";
 
-    private final String TAG = "gss.guru";
-    private OkHttpClient client = new OkHttpClient();
-    private GetNewsTask task = null;
-
-
+    /*
+    ENG: Prepare Views to work with fragment
+    RU: Подготовить Views для работы с фрагментом
+    */
     private static final String NEWS_AUTHOR = "news_author";
     private static final String NEWS_TITLE = "news_title";
     private String author, title;
 
+    /*
+    ENG: Add an interface with method to Fragment.
+    RU: Добавляем нашему Фрагменту интерфейс с методом
+    */
     private OnFragmentInteractionListener mListener;
     public interface OnFragmentInteractionListener {
         void openDrover();
     }
 
+    /*
+    ENG: Prepare Views elements
+    RU: Подготовить элементы Views
+    */
     private AdapterNewsFeed adapterNewsFeed;
     private ProgressBar progress;
     private RecyclerView recyclerView;
     private LinearLayout fl_items_not_found;
     private SwipeRefreshLayout refresh_view;
 
+    /*
+    ENG: Basic elements for working with Fragment
+    RU: Базовые элементы для работы со Фрагментом
+    */
     public FragmentNewsFeed() {
     }
-
     public static FragmentNewsFeed newInstance(String author, String title) {
         FragmentNewsFeed fragment = new FragmentNewsFeed();
         Bundle args = new Bundle();
@@ -84,6 +110,10 @@ public class FragmentNewsFeed extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.f_news, container, false);
 
+        /*
+        ENG: Initialize the views
+        RU: Инициализировать view
+        */
         progress = v.findViewById(R.id.progress);
         refresh_view = v.findViewById(R.id.refresh_view);
         recyclerView = v.findViewById(R.id.recyclerView);
@@ -96,16 +126,10 @@ public class FragmentNewsFeed extends Fragment {
             }
         });
 
-        adapterNewsFeed = new AdapterNewsFeed(getContext());
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_news_animation);
-        recyclerView.setLayoutAnimation(animation);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapterNewsFeed);
-
-        progress.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        fl_items_not_found.setVisibility(View.GONE);
-
+        /*
+        ENG: Initialization and work with Toolbar
+        RU: Инициализация и работа с Toolbar
+        */
         Toolbar mToolbar = v.findViewById(R.id.toolbar);
         mToolbar.setBackgroundColor(getResources().getColor(R.color.colorWhite));
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
@@ -118,7 +142,6 @@ public class FragmentNewsFeed extends Fragment {
                 }
             }
         });
-
         mToolbar.setTitle(String.valueOf(title));
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
         AppBarLayout app_bar = (AppBarLayout)v.findViewById(R.id.app_bar);
@@ -129,49 +152,23 @@ public class FragmentNewsFeed extends Fragment {
             }
         });
 
+        /*
+        ENG: Initialization of the news feed
+        RU: Инициализация новостной ленты
+        */
+        adapterNewsFeed = new AdapterNewsFeed(getContext());
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_news_animation);
+        recyclerView.setLayoutAnimation(animation);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapterNewsFeed);
+
+        /*
+        ENG: Send a request to the server for a list of news
+        RU: Отправляем запрос на server для получение списка новостей
+        */
         getListNews();
+
         return v;
-    }
-
-    private void getListNews(){
-        if (task == null) {
-            task = new GetNewsTask(author);
-            task.execute((Void) null);
-        }
-    }
-
-    public void setListNews(ArrayList<ModelNewsFeed> list) {
-        if (list.size() == 0) {
-            if (fl_items_not_found.getVisibility() != View.VISIBLE) {
-                showContentAnimation(fl_items_not_found, progress);
-            }
-        } else {
-            adapterNewsFeed.addAll(list);
-            showContentAnimation(recyclerView, progress);
-        }
-        hideRefreshView(refresh_view);
-    }
-
-    public void setEmptyList() {
-        hideRefreshView(refresh_view);
-    }
-
-    public void setError() {
-        hideRefreshView(refresh_view);
-        DialigError mDialigError = DialigError.newInstance();
-        mDialigError.registerInterfaceCallback(new DialigError.InterfaceCallback() {
-            @Override
-            public void refresh() {
-
-                getListNews();
-            }
-
-            @Override
-            public void exit() {
-                Objects.requireNonNull(getActivity()).finish();
-            }
-        });
-        mDialigError.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), mDialigError.getClass().getSimpleName());
     }
 
     @Override
@@ -191,6 +188,56 @@ public class FragmentNewsFeed extends Fragment {
         mListener = null;
     }
 
+    /*
+    ENG: Show news feed
+    RU: Показать новостную ленту
+    */
+    public void setListNews(ArrayList<ModelNewsFeed> list) {
+        if (list.size() == 0) {
+            if (fl_items_not_found.getVisibility() != View.VISIBLE) {
+                showContentAnimation(fl_items_not_found, progress);
+            }
+        } else {
+            adapterNewsFeed.addAll(list);
+            showContentAnimation(recyclerView, progress);
+        }
+        hideRefreshView(refresh_view);
+    }
+
+    /*
+    ENG: Show View with "Empty List"
+    RU: Показать View с надписью "Empty List"
+    */
+    public void setEmptyList() {
+        hideRefreshView(refresh_view);
+    }
+
+    /*
+    ENG: Show Error Dialog
+    RU: Показать диалоговое окно с сообщением об ошибке
+    */
+    public void setError() {
+        hideRefreshView(refresh_view);
+        DialigError mDialigError = DialigError.newInstance();
+        mDialigError.registerInterfaceCallback(new DialigError.InterfaceCallback() {
+            @Override
+            public void refresh() {
+
+                getListNews();
+            }
+
+            @Override
+            public void exit() {
+                Objects.requireNonNull(getActivity()).finish();
+            }
+        });
+        mDialigError.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), mDialigError.getClass().getSimpleName());
+    }
+
+    /*
+    ENG: Methods of animation and list update
+    RU: Методы анимации и обновления списка
+    */
     private void showContentAnimation(final View newView, final View oldView) {
         final AlphaAnimation newViewAnimation = new AlphaAnimation(0.0f, 1.0f);
         AlphaAnimation oldViewAnimation = new AlphaAnimation(1.0f, 0.0f);
@@ -216,6 +263,17 @@ public class FragmentNewsFeed extends Fragment {
     public void hideRefreshView(SwipeRefreshLayout refresh_view) {
         if (refresh_view.isShown()) {
             refresh_view.setRefreshing(false);
+        }
+    }
+
+    /*
+    ENG: Request to the server and receive a news feed in response
+    RU: Запроса на сервер и получения новостной ленты в ответ
+    */
+    private void getListNews(){
+        if (task == null) {
+            task = new GetNewsTask(author);
+            task.execute((Void) null);
         }
     }
 

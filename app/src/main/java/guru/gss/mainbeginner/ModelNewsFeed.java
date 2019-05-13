@@ -1,5 +1,10 @@
 package guru.gss.mainbeginner;
 
+
+/*
+ENG: Model with all required fields for news feed
+RU: Модель со всеми необходимыми полями для новостной ленты
+*/
 public class ModelNewsFeed {
 
     public ModelNewsFeed(String title, String description, String url, String urlToImage, String publishedAt) {
