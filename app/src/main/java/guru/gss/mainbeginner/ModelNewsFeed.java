@@ -1,6 +1,5 @@
 package guru.gss.mainbeginner;
 
-
 /*
 ENG: Model with all required fields for news feed
 RU: Модель со всеми необходимыми полями для новостной ленты

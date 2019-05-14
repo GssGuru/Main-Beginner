@@ -59,7 +59,7 @@ public class AdapterNewsFeed extends RecyclerView.Adapter<AdapterNewsFeed.ViewHo
     }
 
     /*
-    ENG: Цork with View for each position in the list
+    ENG: Work with View for each position in the list
     RU: Работаем с View для каждой позиции в списке
     */
     @Override

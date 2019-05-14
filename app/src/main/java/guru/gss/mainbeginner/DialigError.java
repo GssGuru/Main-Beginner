@@ -72,12 +72,13 @@ public class DialigError extends DialogFragment {
     ENG: Add an interface with response methods to DialogFragment.
     RU: Добавляем нашему Диалоговому окну интерфейс с методами ответа
     */
-    public interface InterfaceCallback {
-        void refresh();
-        void exit();
-    }
     private InterfaceCallback interfaceCallback;
     public void registerInterfaceCallback(InterfaceCallback interfaceCallback) {
         this.interfaceCallback = interfaceCallback;
     }
+    public interface InterfaceCallback {
+        void refresh();
+        void exit();
+    }
+
 }

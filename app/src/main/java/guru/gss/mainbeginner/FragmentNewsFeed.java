@@ -34,8 +34,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /*
-ENG: prepare Views elements
-RU: подготовить элементы Views
+ENG: Fragment for working with news feed
+RU: Фрагмент для работы с новосной лентой
 */
 public class FragmentNewsFeed extends Fragment {
 
@@ -55,8 +55,8 @@ public class FragmentNewsFeed extends Fragment {
     private final String API_KEY = "7c4feddaa4b749a48dfa50252ccde419";
 
     /*
-    ENG: Prepare Views to work with fragment
-    RU: Подготовить Views для работы с фрагментом
+    ENG: Prepare elements to work with fragment
+    RU: Подготовить элементы для работы с фрагментом
     */
     private static final String NEWS_AUTHOR = "news_author";
     private static final String NEWS_TITLE = "news_title";
