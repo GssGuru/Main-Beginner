@@ -29,7 +29,7 @@ In the [`MainActivity`](https://github.com/GssGuru/Main-Beginner/blob/master/app
 
 In the end we should be able to
 - [`MainActivity`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/MainActivity.java) - 
-The main activity in which everything will happen. Here we manage fragments using the navigation menu.
+The main activity. Here we manage fragments using the navigation menu.
 - [`FragmentNewsFeed`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/FragmentNewsFeed.java) - Fragment showing a specific news feed
 - [`AdapterNewsFeed`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/AdapterNewsFeed.java) - using it we work with a list
 - [`DialigError`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/DialigError.java) - Dialog box to display error
