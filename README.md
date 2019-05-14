@@ -25,7 +25,7 @@ Carefully read the code comments.
 
 Since this project is for beginners, we will write everything in activity and Fragment. Without using any architectural solutions.
 
-In the MainActivity we add a navigation menu to choose which news feed to display. News feed reflecting using an AdapterNews and located in the FragmentNewsFeed. We make a request to the server to receive the news feed in the FragmentNewsFeed. If an error occurs in the request, then show a ErrorDialog with an error and the ability to either repeat the request or exit from the application.
+In the [`MainActivity`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/MainActivity.java) we add a navigation menu to choose which news feed to display. News feed reflecting using an [`AdapterNewsFeed`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/AdapterNewsFeed.java) and located in the [`FragmentNewsFeed`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/FragmentNewsFeed.java). We make a request to the server to receive the news feed in the [`FragmentNewsFeed`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/FragmentNewsFeed.java). If an error occurs in the request, then show a [`DialigError`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/DialigError.java) with an error and the ability to either repeat the request or exit from the application.
 
 В конце у нас должно получитса
 - [`MainActivity`](https://github.com/GssGuru/Main-Beginner/blob/master/app/src/main/java/guru/gss/mainbeginner/MainActivity.java)
