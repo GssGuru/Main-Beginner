@@ -28,10 +28,11 @@ Since this project is for beginners, we will write everything in activity and Fr
 In the MainActivity we add a navigation menu to choose which news feed to display. News feed reflecting using an AdapterNews and located in the FragmentNewsFeed. We make a request to the server to receive the news feed in the FragmentNewsFeed. If an error occurs in the request, then show a ErrorDialog with an error and the ability to either repeat the request or exit from the application.
 
 В конце у нас должно получитса
-- MainActivity
-- FrafmentNewsFeed
-- AdapterNews
-- ErrorDialog
+- [`MainActivity`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res)
+- [`FrafmentNewsFeed`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res)
+- [`AdapterNews`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res)
+- [`ErrorDialog`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res)
+- [`ModelNewsFeed`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res)
 
 ## Resources code
 [`Res folder.`](https://github.com/GssGuru/Main-Beginner/tree/master/app/src/main/res) Change only Application Name
